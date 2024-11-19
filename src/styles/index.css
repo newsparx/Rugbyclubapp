@@ -1,20 +1,9 @@
-/* Add basic CSS rules */
-body {
-  margin: 0;
-  font-family: sans-serif;
-}
-
-#root {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
+/* Tailwind directives should come first */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Add custom CSS rules */
 body {
   margin: 0;
   font-family: sans-serif;
