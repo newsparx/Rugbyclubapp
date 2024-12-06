@@ -2,6 +2,29 @@ import React, { useState } from 'react';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  // Default admin credentials
+  const adminCredentials = {
+    username: 'admin',
+    password: 'password123',
+  };
+
+  const handleLogin = () => {
+    if (username === adminCredentials.username && password === adminCredentials.password) {
+      setIsLoggedIn(true);
+    } else {
+      alert('Invalid credentials');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
+    setPassword('');
+  };
 
   return (
     <div className="bg-black text-white font-sans">
@@ -42,36 +65,84 @@ const App = () => {
         </nav>
       </header>
 
-      {/* Privacy Notice */}
-      <div className="bg-gray-800 p-4 border border-gray-600 max-w-4xl mx-auto mt-4 rounded">
-        <h2 className="text-lg font-semibold">World Rugby: We value your privacy.</h2>
-        <p className="text-sm mt-2">
-          We and our third parties store, access, and/or process information about your personal data, your devices, and
-          your online interactions using cookies, so we can provide, analyse, and improve our services.
-        </p>
-        <div className="flex justify-end space-x-4 mt-4">
-          <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600">Cookies Settings</button>
-          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400">Reject All</button>
-          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-400">Accept All Cookies</button>
-        </div>
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto mt-8">
+        {!isLoggedIn ? (
+          <div className="bg-gray-800 p-6 rounded shadow-md">
+            <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full mb-4 p-2 rounded border border-gray-600"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full mb-4 p-2 rounded border border-gray-600"
+            />
+            <button
+              onClick={handleLogin}
+              className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400"
+            >
+              Login
+            </button>
+          </div>
+        ) : (
+          <div className="bg-gray-800 p-6 rounded shadow-md">
+            <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
+            <p className="mb-4">Manage the Rugby Club portal below.</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Manage Members */}
+              <div className="bg-gray-700 p-4 rounded shadow-md">
+                <h3 className="text-xl font-bold mb-2">Manage Members</h3>
+                <p className="text-sm mb-4">View and edit member details.</p>
+                <button className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400">
+                  Go to Members
+                </button>
+              </div>
+
+              {/* Payment Status */}
+              <div className="bg-gray-700 p-4 rounded shadow-md">
+                <h3 className="text-xl font-bold mb-2">Payment Status</h3>
+                <p className="text-sm mb-4">Check payment status for memberships.</p>
+                <button className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400">
+                  View Payments
+                </button>
+              </div>
+
+              {/* Membership Types */}
+              <div className="bg-gray-700 p-4 rounded shadow-md">
+                <h3 className="text-xl font-bold mb-2">Membership Types</h3>
+                <p className="text-sm mb-4">Create and manage membership products.</p>
+                <button className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400">
+                  Manage Memberships
+                </button>
+              </div>
+
+              {/* Manage Teams */}
+              <div className="bg-gray-700 p-4 rounded shadow-md">
+                <h3 className="text-xl font-bold mb-2">Manage Teams</h3>
+                <p className="text-sm mb-4">Add, edit, and organize teams.</p>
+                <button className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400">
+                  Manage Teams
+                </button>
+              </div>
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-400 mt-6"
+            >
+              Logout
+            </button>
+          </div>
+        )}
       </div>
-
-      {/* Hero Section with Background Image */}
-      <section
-        className="mt-8 text-center bg-cover bg-center py-16 px-8 border-b border-green-500"
-        style={{ backgroundImage: "url('/images/hero-banner.jpg')", height: "500px" }}
-      >
-        <h1 className="text-3xl font-bold mb-4">RWC Unveil</h1>
-        <p className="text-lg mb-6">Watch Now</p>
-        <button className="bg-green-500 text-black px-6 py-3 rounded text-lg hover:bg-green-400">Watch Now →</button>
-      </section>
-
-      {/* Logo Section */}
-      <section className="flex justify-center items-center space-x-8 py-16 bg-white text-black">
-        <img src="/path-to-logo1.png" alt="Logo 1" className="w-24 h-24" />
-        <img src="/path-to-logo2.png" alt="Logo 2" className="w-24 h-24" />
-        <img src="/path-to-logo3.png" alt="Logo 3" className="w-24 h-24" />
-      </section>
 
       {/* Footer */}
       <footer className="bg-black text-gray-400 text-center py-4 mt-8">
