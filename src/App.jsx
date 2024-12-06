@@ -13,18 +13,22 @@ const App = () => {
   };
 
   const handleLogin = () => {
-    if (username === adminCredentials.username && password === adminCredentials.password) {
-      setIsLoggedIn(true);
-    } else {
-      alert('Invalid credentials');
-    }
-  };
+  // Logging user inputs and expected credentials for debugging
+  console.log("Username entered:", username);
+  console.log("Password entered:", password);
+  console.log("Expected Username:", adminCredentials.username);
+  console.log("Expected Password:", adminCredentials.password);
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUsername('');
-    setPassword('');
-  };
+  // Authentication logic
+  if (username.trim() === adminCredentials.username && password === adminCredentials.password) {
+    console.log("Login successful");
+    setIsLoggedIn(true); // Set the logged-in state to true
+  } else {
+    console.log("Login failed");
+    alert("Invalid credentials"); // Display an error message
+  }
+};
+
 
   return (
     <div className="bg-black text-white font-sans">
