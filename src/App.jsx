@@ -8,7 +8,7 @@ const App = () => {
 
   // Default admin credentials
   const adminCredentials = {
-    username: 'admin',
+    username: 'admin@admin.com',
     password: 'password123',
   };
 
