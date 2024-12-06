@@ -56,13 +56,14 @@ const App = () => {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="mt-8">
-        <div className="text-center bg-black py-16 px-8 border-b border-green-500">
-          <h1 className="text-3xl font-bold mb-4">RWC Unveil</h1>
-          <p className="text-lg mb-6">Watch Now</p>
-          <button className="bg-green-500 text-black px-6 py-3 rounded text-lg hover:bg-green-400">Watch Now →</button>
-        </div>
+      {/* Hero Section with Background Image */}
+      <section
+        className="mt-8 text-center bg-cover bg-center py-16 px-8 border-b border-green-500"
+        style={{ backgroundImage: "url('/images/hero-banner.jpg')", height: "500px" }}
+      >
+        <h1 className="text-3xl font-bold mb-4">RWC Unveil</h1>
+        <p className="text-lg mb-6">Watch Now</p>
+        <button className="bg-green-500 text-black px-6 py-3 rounded text-lg hover:bg-green-400">Watch Now →</button>
       </section>
 
       {/* Logo Section */}
