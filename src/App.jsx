@@ -5,6 +5,7 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   // Default admin credentials
   const adminCredentials = {
@@ -12,20 +13,34 @@ const App = () => {
     password: 'password123',
   };
 
-  const handleLogin = () => {
-    console.log("Login button clicked"); // Debugging to confirm button click
-
+  const handleLogin = (e) => {
+    e.preventDefault(); // Prevent form submission default behavior
+    
+    setLoginError(''); // Clear any previous errors
+    
+    console.log("=== Login Attempt ===");
     console.log("Username entered:", username);
     console.log("Password entered:", password);
-    console.log("Expected Username:", adminCredentials.username);
-    console.log("Expected Password:", adminCredentials.password);
+    
+    try {
+      if (!username || !password) {
+        setLoginError('Please enter both email and password');
+        return;
+      }
 
-    if (username.trim() === adminCredentials.username && password === adminCredentials.password) {
-      console.log("Login successful");
-      setIsLoggedIn(true);
-    } else {
-      console.log("Login failed");
-      alert("Invalid credentials");
+      if (username.trim() === adminCredentials.username && password === adminCredentials.password) {
+        console.log("Credentials match - Login successful");
+        setIsLoggedIn(true);
+        setLoginError('');
+      } else {
+        console.log("Credentials do not match:");
+        console.log("Username match:", username.trim() === adminCredentials.username);
+        console.log("Password match:", password === adminCredentials.password);
+        setLoginError('Invalid credentials');
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setLoginError('An error occurred during login');
     }
   };
 
@@ -33,19 +48,18 @@ const App = () => {
     setIsLoggedIn(false);
     setUsername('');
     setPassword('');
+    setLoginError('');
   };
 
   return (
     <div className="bg-black text-white font-sans">
-      {/* Header */}
+      {/* Header remains the same */}
       <header className="sticky top-0 bg-black text-green-500 flex items-center justify-between px-6 py-4 border-b border-green-500">
         <div className="text-xl font-bold">RUGBY WORLD CUP</div>
-        {/* Hamburger Icon for Mobile */}
         <button
           className="text-green-500 lg:hidden focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {/* Simple Hamburger Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -61,7 +75,6 @@ const App = () => {
             />
           </svg>
         </button>
-        {/* Navigation Links */}
         <nav
           className={`lg:flex space-x-6 ${isMenuOpen ? 'block' : 'hidden'} lg:block`}
         >
@@ -79,36 +92,41 @@ const App = () => {
         {!isLoggedIn ? (
           <div className="bg-gray-800 p-6 rounded shadow-md">
             <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
-            <input
-              type="email"
-              placeholder="Email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full mb-4 p-2 rounded border border-gray-600"
-              autoComplete="email"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full mb-4 p-2 rounded border border-gray-600"
-              autoComplete="current-password"
-            />
-            <button
-              onClick={handleLogin}
-              className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400"
-            >
-              Login
-            </button>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <input
+                type="email"
+                placeholder="Email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full mb-4 p-2 rounded border border-gray-600 bg-gray-700 text-white"
+                autoComplete="email"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full mb-4 p-2 rounded border border-gray-600 bg-gray-700 text-white"
+                autoComplete="current-password"
+              />
+              {loginError && (
+                <div className="text-red-500 mb-4">{loginError}</div>
+              )}
+              <button
+                type="submit"
+                className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-400"
+              >
+                Login
+              </button>
+            </form>
           </div>
         ) : (
+          // Dashboard content remains the same
           <div className="bg-gray-800 p-6 rounded shadow-md">
             <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
             <p className="mb-4">Manage the Rugby Club portal below.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Manage Members */}
               <div className="bg-gray-700 p-4 rounded shadow-md">
                 <h3 className="text-xl font-bold mb-2">Manage Members</h3>
                 <p className="text-sm mb-4">View and edit member details.</p>
@@ -117,7 +135,6 @@ const App = () => {
                 </button>
               </div>
 
-              {/* Payment Status */}
               <div className="bg-gray-700 p-4 rounded shadow-md">
                 <h3 className="text-xl font-bold mb-2">Payment Status</h3>
                 <p className="text-sm mb-4">Check payment status for memberships.</p>
@@ -126,7 +143,6 @@ const App = () => {
                 </button>
               </div>
 
-              {/* Membership Types */}
               <div className="bg-gray-700 p-4 rounded shadow-md">
                 <h3 className="text-xl font-bold mb-2">Membership Types</h3>
                 <p className="text-sm mb-4">Create and manage membership products.</p>
@@ -135,7 +151,6 @@ const App = () => {
                 </button>
               </div>
 
-              {/* Manage Teams */}
               <div className="bg-gray-700 p-4 rounded shadow-md">
                 <h3 className="text-xl font-bold mb-2">Manage Teams</h3>
                 <p className="text-sm mb-4">Add, edit, and organize teams.</p>
