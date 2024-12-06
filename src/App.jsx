@@ -13,22 +13,27 @@ const App = () => {
   };
 
   const handleLogin = () => {
-  // Logging user inputs and expected credentials for debugging
-  console.log("Username entered:", username);
-  console.log("Password entered:", password);
-  console.log("Expected Username:", adminCredentials.username);
-  console.log("Expected Password:", adminCredentials.password);
+    console.log("Login button clicked"); // Debugging to confirm button click
 
-  // Authentication logic
-  if (username.trim() === adminCredentials.username && password === adminCredentials.password) {
-    console.log("Login successful");
-    setIsLoggedIn(true); // Set the logged-in state to true
-  } else {
-    console.log("Login failed");
-    alert("Invalid credentials"); // Display an error message
-  }
-};
+    console.log("Username entered:", username);
+    console.log("Password entered:", password);
+    console.log("Expected Username:", adminCredentials.username);
+    console.log("Expected Password:", adminCredentials.password);
 
+    if (username.trim() === adminCredentials.username && password === adminCredentials.password) {
+      console.log("Login successful");
+      setIsLoggedIn(true);
+    } else {
+      console.log("Login failed");
+      alert("Invalid credentials");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUsername('');
+    setPassword('');
+  };
 
   return (
     <div className="bg-black text-white font-sans">
@@ -75,11 +80,12 @@ const App = () => {
           <div className="bg-gray-800 p-6 rounded shadow-md">
             <h2 className="text-2xl font-bold mb-4">Admin Login</h2>
             <input
-              type="text"
-              placeholder="Username"
+              type="email"
+              placeholder="Email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full mb-4 p-2 rounded border border-gray-600"
+              autoComplete="email"
             />
             <input
               type="password"
@@ -87,6 +93,7 @@ const App = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full mb-4 p-2 rounded border border-gray-600"
+              autoComplete="current-password"
             />
             <button
               onClick={handleLogin}
