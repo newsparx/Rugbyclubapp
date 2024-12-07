@@ -133,3 +133,25 @@ const App = () => {
                   Sign In
                 </button>
               </form>
+              </div>
+          </div>
+        ) : (
+          // Render different dashboard based on user type
+          userType === 'admin' ? 
+            <AdminDashboard onLogout={handleLogout} /> : 
+            <UserDashboard user={users[username]} onLogout={handleLogout} />
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-4 mt-auto">
+        <div className="container mx-auto text-center">
+          <p>© 2024 Rugby Club. All Rights Reserved.</p>
+          <p>Follow us on <a href="#" className="text-blue-400 hover:underline">Social Media</a></p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
