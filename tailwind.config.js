@@ -1,21 +1,10 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: ["class"], // Enables class-based dark mode
+export default {
   content: [
-    './pages/**/*.{js,jsx,ts,tsx}', // Updated to include TypeScript if needed
-    './components/**/*.{js,jsx,ts,tsx}',
-    './app/**/*.{js,jsx,ts,tsx}',
-    './src/**/*.{js,jsx,ts,tsx}', // Matches the src directory structure
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  prefix: "", // No prefix unless needed
   theme: {
-    container: {
-      center: true,
-      padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
-    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -59,5 +48,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")], // Includes tailwindcss-animate
-};
+  plugins: [require("tailwindcss-animate")],
+}
