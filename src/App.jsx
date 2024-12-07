@@ -1,44 +1,53 @@
 import React, { useState, useEffect } from 'react';
 
 const App = () => {
+  // Initialize states from localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(() => {
+    return localStorage.getItem('username') || '';
+  });
   const [password, setPassword] = useState('');
 
-  // Debug logging for render state
+  // Update localStorage when login state changes
   useEffect(() => {
-    console.log('Current login state:', isLoggedIn);
-  }, [isLoggedIn]);
+    if (isLoggedIn) {
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('username', username);
+    } else {
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('username');
+    }
+  }, [isLoggedIn, username]);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log('Login attempt initiated');
-    
+    console.log('Login attempt:', { username, password });
+
     const adminCredentials = {
       username: 'admin@admin.com',
       password: 'password123',
     };
 
-    if (username.trim() === adminCredentials.username && password === adminCredentials.password) {
-      console.log('Credentials match - setting isLoggedIn to true');
+    if (username.trim() === adminCredentials.username && 
+        password === adminCredentials.password) {
+      console.log('Login successful');
       setIsLoggedIn(true);
-      console.log('Login state after update:', isLoggedIn); // Note: This will show the previous state due to closure
     } else {
-      console.log('Invalid credentials');
+      console.log('Login failed');
       alert('Invalid credentials');
     }
   };
 
   const handleLogout = () => {
-    console.log('Logout initiated');
     setIsLoggedIn(false);
     setUsername('');
     setPassword('');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
   };
-
-  // Debug render output
-  console.log('Rendering with isLoggedIn:', isLoggedIn);
 
   return (
     <div className="min-h-screen bg-gray-100">
