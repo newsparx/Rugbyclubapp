@@ -1,7 +1,43 @@
 import React, { useState, useEffect } from 'react';
 
+// Mock user database
+const users = {
+  'admin@admin.com': { 
+    password: 'password123', 
+    type: 'admin',
+    name: 'Admin User'
+  },
+  'user@example.com': { 
+    password: 'user123', 
+    type: 'user',
+    name: 'John Smith',
+    membershipType: 'Family Gold',
+    membershipStatus: 'Active',
+    memberSince: '2023-01-15',
+    nextPaymentDue: '2024-02-15',
+    paymentAmount: 150.00,
+    familyMembers: [
+      {
+        id: 'F1',
+        name: 'Sarah Smith',
+        relationship: 'Spouse',
+        membershipType: 'Family Gold - Secondary',
+        status: 'Active'
+      },
+      {
+        id: 'F2',
+        name: 'Tommy Smith',
+        relationship: 'Child',
+        membershipType: 'Junior Member',
+        status: 'Active',
+        team: 'Under 12s'
+      }
+    ]
+  }
+};
+
 const App = () => {
-  // Enhanced state management
+  // Initialize states from localStorage
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('isLoggedIn') === 'true';
   });
@@ -13,38 +49,6 @@ const App = () => {
   });
   const [password, setPassword] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Mock user database - this would come from your backend later
-  const users = {
-    'admin@admin.com': { password: 'password123', type: 'admin' },
-    'user@example.com': { 
-      password: 'user123', 
-      type: 'user',
-      name: 'John Smith',
-      membershipType: 'Family Gold',
-      membershipStatus: 'Active',
-      memberSince: '2023-01-15',
-      nextPaymentDue: '2024-02-15',
-      paymentAmount: 150.00,
-      familyMembers: [
-        {
-          id: 'F1',
-          name: 'Sarah Smith',
-          relationship: 'Spouse',
-          membershipType: 'Family Gold - Secondary',
-          status: 'Active'
-        },
-        {
-          id: 'F2',
-          name: 'Tommy Smith',
-          relationship: 'Child',
-          membershipType: 'Junior Member',
-          status: 'Active',
-          team: 'Under 12s'
-        }
-      ]
-    }
-  };
 
   // Update localStorage when login state changes
   useEffect(() => {
@@ -61,13 +65,15 @@ const App = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const user = users[username];
+    console.log('Login attempt:', { username, password });
 
+    const user = users[username];
     if (user && user.password === password) {
+      console.log('Login successful');
       setIsLoggedIn(true);
       setUserType(user.type);
-      console.log(`Login successful as ${user.type}`);
     } else {
+      console.log('Login failed');
       alert('Invalid credentials');
     }
   };
@@ -80,9 +86,10 @@ const App = () => {
   };
 
   // User Dashboard Component
-  const UserDashboard = ({ userData }) => {
+  const UserDashboard = () => {
     const [showPaymentModal, setShowPaymentModal] = useState(false);
-    const user = users[username]; // Get current user data
+    const user = users[username] || {};
+    const familyMembers = user.familyMembers || [];
 
     return (
       <div className="container mx-auto px-4 py-8">
@@ -90,7 +97,7 @@ const App = () => {
           {/* Header with Welcome Message */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold">Welcome, {user.name}</h1>
+              <h1 className="text-2xl font-bold">Welcome, {user.name || 'User'}</h1>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
@@ -105,15 +112,15 @@ const App = () => {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-bold mb-4">Membership Details</h2>
               <div className="space-y-3">
-                <p><span className="font-semibold">Type:</span> {user.membershipType}</p>
-                <p><span className="font-semibold">Status:</span> {user.membershipStatus}</p>
-                <p><span className="font-semibold">Member Since:</span> {user.memberSince}</p>
-                <p><span className="font-semibold">Next Payment:</span> {user.nextPaymentDue}</p>
+                <p><span className="font-semibold">Type:</span> {user.membershipType || 'N/A'}</p>
+                <p><span className="font-semibold">Status:</span> {user.membershipStatus || 'N/A'}</p>
+                <p><span className="font-semibold">Member Since:</span> {user.memberSince || 'N/A'}</p>
+                <p><span className="font-semibold">Next Payment:</span> {user.nextPaymentDue || 'N/A'}</p>
                 <button
                   onClick={() => setShowPaymentModal(true)}
                   className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 >
-                  Make Payment (£{user.paymentAmount})
+                  Make Payment (£{user.paymentAmount || '0.00'})
                 </button>
               </div>
             </div>
@@ -122,19 +129,41 @@ const App = () => {
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-bold mb-4">Family Members</h2>
               <div className="space-y-4">
-                {user.familyMembers.map(member => (
-                  <div key={member.id} className="border-b pb-3 last:border-0">
-                    <p className="font-semibold">{member.name}</p>
-                    <p className="text-sm text-gray-600">{member.relationship}</p>
-                    <p className="text-sm text-gray-600">{member.membershipType}</p>
-                    {member.team && (
-                      <p className="text-sm text-blue-600">Team: {member.team}</p>
-                    )}
-                  </div>
-                ))}
+                {familyMembers.length > 0 ? (
+                  familyMembers.map(member => (
+                    <div key={member.id} className="border-b pb-3 last:border-0">
+                      <p className="font-semibold">{member.name}</p>
+                      <p className="text-sm text-gray-600">{member.relationship}</p>
+                      <p className="text-sm text-gray-600">{member.membershipType}</p>
+                      {member.team && (
+                        <p className="text-sm text-blue-600">Team: {member.team}</p>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No family members found</p>
+                )}
               </div>
             </div>
           </div>
+
+          {/* Payment Modal */}
+          {showPaymentModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full">
+                <h3 className="text-xl font-bold mb-4">Make Payment</h3>
+                <p className="mb-4">Amount due: £{user.paymentAmount || '0.00'}</p>
+                <div className="space-y-4">
+                  <button 
+                    onClick={() => setShowPaymentModal(false)}
+                    className="w-full bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
